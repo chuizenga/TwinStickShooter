@@ -6,6 +6,6 @@ public class CameraFollow : MonoBehaviour {
 	public GameObject target;
 	
 	void LateUpdate () {
-		transform.position = target.transform.position;
+		transform.position = target.transform.position - transform.forward;
 	}
 }

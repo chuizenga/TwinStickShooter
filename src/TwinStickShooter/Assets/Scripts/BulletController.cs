@@ -42,5 +42,22 @@ public class BulletController : MonoBehaviour {
 		}
 			
 	}
+	void OnTriggerEnter(Collider other)
+	{
+		other.gameObject.GetComponent<EnemyController> ().Hit (10,CritChance ());
+		//Destroy (other.gameObject);
+		Destroy (gameObject);
+		//Add EXP
+		//gameController2.AddExp(expValue);
+		
+	}
+	bool CritChance()
+	{
+		int temp = Random.Range (0, 100);
+		if (temp < 50) {
+			return true;
+		}
+		return false;
+	}
 
 }
