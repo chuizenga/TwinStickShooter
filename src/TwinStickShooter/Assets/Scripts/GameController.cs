@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class GameController : MonoBehaviour {
 	//Weapons
@@ -36,6 +37,15 @@ public class GameController : MonoBehaviour {
 	public float storeChunkY;
 	// ==END WORLD STUFF==
 
+
+	//UI STUFF
+	private Image xpBar;
+	private Image weaponIcon;
+	private Text levelText;
+	public Sprite weapon1;
+	public Sprite weapon2;
+	public Sprite weapon3;
+
 	float time;
 
 	// Use this for initialization
@@ -50,6 +60,11 @@ public class GameController : MonoBehaviour {
 		}		
 		storeChunkX = Mathf.Ceil(playerX / 5);
 		storeChunkY = Mathf.Ceil(playerY / 5);
+
+		//Initiate UI
+		xpBar = transform.FindChild ("UICanvas").FindChild ("xpBG").FindChild ("xp").GetComponent<Image> ();
+		weaponIcon = transform.FindChild ("UICanvas").FindChild ("weaponIcon").GetComponent<Image> ();
+		levelText = transform.FindChild ("UICanvas").FindChild ("levelText").GetComponent<Text> ();
 
 
 
@@ -99,11 +114,14 @@ public class GameController : MonoBehaviour {
 		//EXPERIENCE AND LEVELING
 		maxExp = 10 + 10*(level-1);
 		if (exp >= maxExp) {
+			exp-=maxExp;
 			level++;
-			exp=0;
 		}
 		//Display
-		experienceText.text = ("Lv: " + level + " XP: " + exp+"/"+maxExp);
+		//experienceText.text = ("Lv: " + level + " XP: " + exp+"/"+maxExp);
+		xpBar.fillAmount = exp / maxExp;
+		levelText.text = "Lv. " + level;
+
 
 
 	}
@@ -160,7 +178,7 @@ public class GameController : MonoBehaviour {
 				currentWeapon++;
 			}
 			else currentWeapon = 1;
-			Debug.Log ("You Scrolled Down, Current Weapon:" +currentWeapon);
+			//Debug.Log ("You Scrolled Down, Current Weapon:" +currentWeapon);
 		}
 		else if (d > 0f)
 		{
@@ -170,7 +188,7 @@ public class GameController : MonoBehaviour {
 			}
 			else currentWeapon = 3;
 			
-			Debug.Log ("You Scrolled Up, Current Weapon:" +currentWeapon);
+			//Debug.Log ("You Scrolled Up, Current Weapon:" +currentWeapon);
 		}
 		UpdateWeapon (currentWeapon);
 
@@ -178,14 +196,18 @@ public class GameController : MonoBehaviour {
 	//WeaponGUI Text
 	void UpdateWeapon(float w)
 	{
+		//weaponIcon.GetComponent<Image> () = weapon1;
 		if (w == 1) {
-			weaponText.text = "Staff";
+			//weaponText.text = "Staff";
+			weaponIcon.sprite = weapon1;
 		}
 		if (w == 2) {
-			weaponText.text = "Sword";
+			//weaponText.text = "Sword";
+			weaponIcon.sprite = weapon2;
 		}
 		if (w == 3) {
-			weaponText.text = "Bow";
+			//weaponText.text = "Bow";
+			weaponIcon.sprite = weapon3;
 		}
 
 	}
