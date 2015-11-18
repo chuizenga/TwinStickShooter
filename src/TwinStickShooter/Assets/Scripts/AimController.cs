@@ -14,6 +14,9 @@ public class AimController : MonoBehaviour {
 	public GameObject prefabMagicMissile;
 	public GameObject prefabSlash;
 	public GameObject prefabArrow;
+	public GameObject prefabFireBall;
+	public GameObject prefabEnergyBlade;
+	public GameObject prefabPiercingShot;
 
 	public float bulletDelay = .25f;
 	float timeUntilNextBullet=0;
@@ -45,7 +48,15 @@ public class AimController : MonoBehaviour {
 		if (Input.GetAxis ("Fire1") > 0) {
 			if (timeUntilNextBullet <= 0) {
 				RayCastShot (); //Shoots a Ray
-				PrimaryAttack ();
+				LAttack ();
+				timeUntilNextBullet = bulletDelay;
+			} else {
+				timeUntilNextBullet -= Time.deltaTime;
+			}
+		} else if (Input.GetAxis ("Fire2") > 0) {
+			if (timeUntilNextBullet <= 0) {
+				RayCastShot (); //Shoots a Ray
+				RAttack ();
 				timeUntilNextBullet = bulletDelay;
 			} else {
 				timeUntilNextBullet -= Time.deltaTime;
@@ -85,7 +96,7 @@ public class AimController : MonoBehaviour {
 		}*/
 	}
 
-	void PrimaryAttack ()
+	void LAttack ()
 	{
 		//1 Staff
 		if (gameController.currentWeapon == 1) {
@@ -98,6 +109,21 @@ public class AimController : MonoBehaviour {
 		//3 Bow
 		if (gameController.currentWeapon == 3) {
 			Instantiate (prefabArrow, transform.position, Quaternion.identity);
+		}
+	}
+	void RAttack ()
+	{
+		//1 Staff
+		if ((gameController.currentWeapon == 1)&& (gameController.currentWepLv >=5) && (gameController.mana > 10)) {
+			Instantiate (prefabFireBall, transform.position, Quaternion.identity);
+		}
+		//2 Sword
+		if ((gameController.currentWeapon == 2)&& (gameController.currentWepLv >=5)) {
+			Instantiate (prefabEnergyBlade, transform.position, Quaternion.identity);
+		}
+		//3 Bow
+		if ((gameController.currentWeapon == 3)&& (gameController.currentWepLv >=5)) {
+			Instantiate (prefabPiercingShot, transform.position, Quaternion.identity);
 		}
 	}
 }

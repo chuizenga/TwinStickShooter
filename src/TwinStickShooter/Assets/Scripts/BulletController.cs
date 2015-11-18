@@ -8,11 +8,16 @@ public class BulletController : MonoBehaviour {
 	private GameObject aimController;
 	//private GameController gameController;
 	private GameObject player;
-	float weaponType;
+	public float weaponType;
 	//AimControllerScript
 	float dir;
 	float xPos;
 	float yPos;
+	public float damage;
+	public float critChance;
+	public float manaValue;
+
+	float expValue = 1; // Weapon Experience
 	// Use this for initialization
 	void Start()
 	{
@@ -24,13 +29,22 @@ public class BulletController : MonoBehaviour {
 		Destroy(gameObject, lifetime);
 		transform.position += transform.up * .3F;
 		transform.rotation = Quaternion.Euler (90, dir, 0);
-		weaponType = aimController.GetComponent<AimController>().gameController.currentWeapon;
+		//Get weapon type
+		//weaponType = aimController.GetComponent<AimController>().gameController.currentWeapon;
+		damage = aimController.GetComponent<AimController>().gameController.damage;
+		critChance = aimController.GetComponent<AimController>().gameController.calcCritChance;
+		AddWeaponExperience (expValue);
+
+		if (weaponType == 4) {
+			aimController.GetComponent<AimController>().gameController.SpendMana(manaValue);
+		}
+
 	}
 
 	// Update is called once per frame
 	void LateUpdate () {
 		//Staff and Bow
-		if (weaponType == 1F || weaponType == 3F) {
+		if (weaponType != 2F) {
 			transform.position += transform.up * speed * Time.deltaTime;
 		}
 		//Sword
@@ -42,22 +56,34 @@ public class BulletController : MonoBehaviour {
 		}
 			
 	}
+	//Collide with enemy
 	void OnTriggerEnter(Collider other)
 	{
-		other.gameObject.GetComponent<EnemyController> ().Hit (10,CritChance ());
+		other.gameObject.GetComponent<EnemyController> ().Hit (damage,CritChance ());
 		//Destroy (other.gameObject);
-		Destroy (gameObject);
+		if (weaponType != 2) {
+			Destroy (gameObject);
+		}
 		//Add EXP
 		//gameController2.AddExp(expValue);
 		
 	}
+
+	/// <summary>
+	/// Calculate if hit was critical
+	/// </summary>
+	/// <returns><c>true</c>, if chance was crited, <c>false</c> otherwise.</returns>
 	bool CritChance()
 	{
 		int temp = Random.Range (0, 100);
-		if (temp < 50) {
+		if (temp < critChance) {
 			return true;
 		}
 		return false;
+	}
+	void AddWeaponExperience(float expValue)
+	{
+		gameController.GetComponent<GameController> ().AddWeaponExp (expValue);
 	}
 
 }

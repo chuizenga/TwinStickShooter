@@ -75,6 +75,8 @@ public class EnemyController : MonoBehaviour {
 	}
 	public void Hit(float damage, bool isCrit)
 	{
+		if (isCrit)
+			damage *= 2;
 		enemyHealth -= damage;
 		healthBar.fillAmount = enemyHealth / enemyMaxHealth;
 		if (!isCrit) {
@@ -83,7 +85,11 @@ public class EnemyController : MonoBehaviour {
 			InitCBT (damage.ToString ()).GetComponent<Animator> ().SetTrigger ("Crit");
 		}
 	}
-
+	/// <summary>
+	/// Floating Combat Text
+	/// </summary>
+	/// <returns>The CB.</returns>
+	/// <param name="text">Text.</param>
 	GameObject InitCBT(string text)
 	{
 		GameObject temp = Instantiate (CBTprefab) as GameObject;
